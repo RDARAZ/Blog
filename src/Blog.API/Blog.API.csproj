@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Configuration\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Filters\" />
     <Folder Include="Middleware\" />
   </ItemGroup>
