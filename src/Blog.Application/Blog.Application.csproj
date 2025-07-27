@@ -8,7 +8,6 @@
     <Folder Include="Behaviors\" />
     <Folder Include="DTOs\" />
     <Folder Include="Features\" />
-    <Folder Include="Interfaces\" />
     <Folder Include="Mapping\" />
     <Folder Include="Validators\" />
   </ItemGroup>
