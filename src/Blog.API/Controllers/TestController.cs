@@ -17,11 +17,8 @@ public class TestController(BlogDbContext context) : ControllerBase
         {
             var testUser = new User
             {
-                Username = "testuser",
+                UserName = "testuser",
                 Email = "test@example.com",
-                PasswordHash = "hashedpassword", // In real app, use proper hashing
-                Salt = "saltvalue",
-                Role = UserRole.User,
                 Gender = Gender.Male,
                 Age = 30,
                 IsActive = true
@@ -65,11 +62,8 @@ public class TestController(BlogDbContext context) : ControllerBase
         var users = await context.Users
             .Select(u => new
             {
-                u.Username,
+                u.UserName,
                 u.Email,
-                u.PasswordHash,
-                u.Salt,
-                u.Role,
                 u.Gender,
                 u.Age,
                 u.IsActive
@@ -90,7 +84,7 @@ public class TestController(BlogDbContext context) : ControllerBase
                 a.Content,
                 a.Summary,
                 a.Status,
-                Author = a.Author.Username,
+                Author = a.Author.UserName,
             })
             .ToListAsync();
 

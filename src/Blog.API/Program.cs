@@ -2,6 +2,7 @@ using Blog.API.Configuration;
 using Blog.Application.Interfaces;
 using Blog.Domain.Entities;
 using Blog.Infrastructure.Data;
+using Blog.Infrastructure.Data.DataSeeding;
 using Blog.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,29 @@ builder.Services.AddCustomAuthorization();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var context = scope.ServiceProvider.GetRequiredService<BlogDbContext>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+
+        await context.Database.MigrateAsync();
+        await IdentityDataSeeder.SeedAsync(context, userManager, roleManager);
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetService<ILogger<Program>>();
+        logger?.LogError(ex, "An error occurred during migration or seeding.");
+        if(app.Environment.IsDevelopment())
+        {
+            throw;
+        }
+    }
+
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
