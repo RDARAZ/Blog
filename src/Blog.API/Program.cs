@@ -48,8 +48,11 @@ builder.Services.AddIdentity<User, Role>(options =>
 .AddEntityFrameworkStores<BlogDbContext>()
 .AddDefaultTokenProviders();
 
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
 builder.Services.AddCustomAuthorization();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 
