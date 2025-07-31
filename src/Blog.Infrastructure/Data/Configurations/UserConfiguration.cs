@@ -13,9 +13,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             t.HasCheckConstraint("CK_User_Age", "Age IS NULL OR (Age >= 13 AND Age <= 120)");
         });
 
-        builder.HasKey(u => u.Id);
-
-        builder.Property(u => u.Username)
+        builder.Property(u => u.UserName)
             .IsRequired()
             .HasMaxLength(50);
 
@@ -23,23 +21,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(100);
 
-        builder.Property(u => u.PasswordHash)
-            .IsRequired()
-            .HasMaxLength(255);
-
-        builder.Property(u => u.Salt)
-            .IsRequired()
-            .HasMaxLength(255);
-
-        builder.Property(u => u.Role)
-            .HasConversion<int>()
-            .IsRequired();
-
         builder.Property(u => u.Gender)
             .HasConversion<int>()
             .IsRequired();
 
-        builder.Property(u => u.Age);
+        builder.Property(u => u.Age)
+            .IsRequired(false);
 
         builder.Property(u => u.IsActive)
             .IsRequired()
@@ -57,9 +44,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsUnique()
             .HasDatabaseName("IX_Users_Email");
 
-        builder.HasIndex(u => u.Username)
+        builder.HasIndex(u => u.UserName)
             .IsUnique()
             .HasDatabaseName("IX_Users_Username");
+
+        builder.HasIndex(u => u.CreatedAt)
+            .HasDatabaseName("IX_Users_CreatedAt");
 
         builder.HasMany(u => u.Articles)
             .WithOne(a => a.Author)
