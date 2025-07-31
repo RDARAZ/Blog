@@ -27,8 +27,10 @@ public class TokenService(IOptions<JwtSettings> jwtSettings, ILogger<TokenServic
 				new(ClaimTypes.NameIdentifier, user.Id.ToString()),
 				new(ClaimTypes.Name, user.UserName!),
 				new(ClaimTypes.Email, user.Email!),
-				new("userId", user.Id.ToString()),
-				new("isActive", user.IsActive.ToString())
+                new(ClaimTypes.Gender, ((int)user.Gender).ToString()),
+                new("userId", user.Id.ToString()),
+				new("isActive", user.IsActive.ToString()),
+                new("age", user.Age?.ToString() ?? "")
 			};
 
 			foreach (var role in roles)

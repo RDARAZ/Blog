@@ -1,9 +1,12 @@
 using Blog.API.Configuration;
+using Blog.Application.Behaviors;
+using Blog.Application.Features.Authentication.Commands.RegisterUser;
 using Blog.Application.Interfaces;
 using Blog.Domain.Entities;
 using Blog.Infrastructure.Data;
 using Blog.Infrastructure.Data.DataSeeding;
 using Blog.Infrastructure.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerWithJwtAuth();
 
 //Add DbContext
 builder.Services.AddDbContext<BlogDbContext>(options => 
@@ -27,7 +30,7 @@ builder.Services.AddIdentity<User, Role>(options =>
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
-    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 8;
     options.Password.RequiredUniqueChars = 1;
 
@@ -48,8 +51,15 @@ builder.Services.AddIdentity<User, Role>(options =>
 .AddEntityFrameworkStores<BlogDbContext>()
 .AddDefaultTokenProviders();
 
-builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssemblies(typeof(RegisterUserCommand).Assembly);
+    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+});
 
+builder.Services.AddValidatorsFromAssembly(typeof(RegisterUserCommandValidator).Assembly);
+
+builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddCustomAuthorization();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
