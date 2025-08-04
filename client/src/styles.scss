@@ -1,0 +1,31 @@
+@use '@angular/material' as mat;
+
+// Include the common styles for Angular Material
+@include mat.core();
+
+// Define custom color palette using modern syntax
+$primary-palette: mat.m2-define-palette(mat.$m2-indigo-palette);
+$accent-palette: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
+$warn-palette: mat.m2-define-palette(mat.$m2-red-palette);
+
+// Create theme object using modern syntax
+$blog-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $primary-palette,
+    accent: $accent-palette,
+    warn: $warn-palette,
+  ),
+  typography: mat.m2-define-typography-config(),
+  density: 0,
+));
+
+// Include theme styles for core and each component used in your app
+@include mat.all-component-themes($blog-theme);
+
+// Custom global styles
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+html, body { height: 100%; }
